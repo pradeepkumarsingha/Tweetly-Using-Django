@@ -144,6 +144,6 @@ MAILERS = {
 }
 
 LOGIN_URL='login'
-LOGIN_REDIRECT_URL='tweet-list'
+LOGIN_REDIRECT_URL='tweet_list'
 LOGOUT_URL='index'
 

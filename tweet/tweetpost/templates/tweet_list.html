@@ -1,61 +1,377 @@
 
 {% extends "layouts.html" %}
 
-{% block title %}
-Tweet Post Page
-{% endblock %}
+{% block title %}Tweetly | Home Feed{% endblock %}
 
 {% block content %}
 
-<h1 class="text-center mt-4">Welcome to the Tweet Post Page</h1>
+<style>
+    .feed-wrapper {
+        max-width: 1250px;
+        margin: auto;
+    }
 
-<div class="container mt-4">
+    .feed-sidebar,
+    .feed-card,
+    .right-card {
+        background: #fff;
+        border: 1px solid #e8edf4;
+        border-radius: 17px;
+    }
 
-    <a class="btn btn-primary mb-3"
-       href="{% url 'tweet_create' %}">
-        Create Post
-    </a>
+    .feed-sidebar {
+        padding: 22px;
+        position: sticky;
+        top: 90px;
+    }
 
-    <div class="row gap-3">
+    .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        padding: 13px 15px;
+        margin: 5px 0;
+        border-radius: 11px;
+        color: #475569;
+        font-weight: 600;
+        text-decoration: none;
+    }
 
-        {% for tweet in tweets %}
+    .sidebar-link:hover,
+    .sidebar-link.active {
+        color: #2563eb;
+        background: #eff6ff;
+    }
 
-        <section class="card" style="max-width: 320px;">
+    .sidebar-link i {
+        font-size: 20px;
+    }
 
-            {% if tweet.photo %}
-                <img src="{{ tweet.photo.url }}"
-                     class="card-img-top"
-                     alt="Tweet image">
-            {% endif %}
+    .feed-heading {
+        font-size: 27px;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
 
-            <div class="card-body">
+    .feed-card {
+        padding: 22px;
+        margin-bottom: 18px;
+        transition: .2s ease;
+    }
 
-                <h4>{{ tweet.user.username }}</h4>
+    .feed-card:hover {
+        box-shadow: 0 8px 25px rgba(15, 23, 42, .05);
+    }
 
-                <p>{{ tweet.text }}</p>
+    .user-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: #dbeafe;
+        color: #2563eb;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 800;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
 
-                {% if tweet.user == request.user %}
+    .post-photo {
+        width: 100%;
+        max-height: 430px;
+        object-fit: contain;
+        background: #f8fafc;
+        border-radius: 13px;
+        margin-top: 15px;
+    }
 
-                    <a href="{% url 'tweet_update' tweet.pk %}"
-                       class="btn btn-primary">
-                        Edit
-                    </a>
+    .post-text {
+        font-size: 15px;
+        line-height: 1.75;
+        color: #334155;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
 
-                    <a href="{% url 'tweet_delete' tweet.pk %}"
-                       class="btn btn-danger">
-                        Delete
-                    </a>
+    .post-actions {
+        border-top: 1px solid #edf0f5;
+        margin-top: 17px;
+        padding-top: 15px;
+    }
 
-                {% endif %}
+    .post-actions a {
+        color: #64748b;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .post-actions a:hover {
+        color: #2563eb;
+    }
+
+    .right-card {
+        padding: 20px;
+        margin-bottom: 18px;
+    }
+
+    .create-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    @media(max-width: 991px) {
+        .feed-sidebar {
+            position: static;
+            margin-bottom: 20px;
+        }
+    }
+</style>
+
+<div class="feed-wrapper py-3">
+
+    <div class="row g-4">
+
+        <!-- LEFT SIDEBAR -->
+        <div class="col-lg-3">
+
+            <div class="feed-sidebar">
+
+                <h4 class="fw-bold text-primary mb-4">
+                    <i class="bi bi-twitter-x"></i> Tweetly
+                </h4>
+
+                <a href="{% url 'tweet_list' %}"
+                   class="sidebar-link active">
+                    <i class="bi bi-house-door"></i> Home
+                </a>
+
+                <a href="{% url 'tweet_create' %}"
+                   class="sidebar-link">
+                    <i class="bi bi-plus-circle"></i> Create Post
+                </a>
+
+                <a href="#feed" class="sidebar-link">
+                    <i class="bi bi-chat-left-text"></i> Explore Feed
+                </a>
+
+                <hr>
+
+                <p class="text-secondary small fw-bold">
+                    YOUR ACCOUNT
+                </p>
+
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <div class="user-avatar">
+                        {{ request.user.username|first|upper }}
+                    </div>
+                    <div class="overflow-hidden">
+                        <div class="fw-bold text-truncate">
+                            {{ request.user.username }}
+                        </div>
+                        <small class="text-secondary">Member</small>
+                    </div>
+                </div>
+
+                <a href="{% url 'tweet_create' %}"
+                   class="btn btn-primary w-100">
+                    <i class="bi bi-plus-lg me-2"></i> Create Post
+                </a>
 
             </div>
-        </section>
 
-        {% empty %}
-            <p>No tweets available.</p>
-        {% endfor %}
+        </div>
+
+
+        <!-- CENTRAL FEED -->
+        <div class="col-lg-6" id="feed">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="feed-heading mb-1">Home Feed</h2>
+                    <p class="text-secondary mb-0">
+                        Discover what's happening in the community.
+                    </p>
+                </div>
+
+                <span class="badge rounded-pill bg-primary-subtle text-primary p-2">
+                    <i class="bi bi-globe2"></i> Community
+                </span>
+            </div>
+
+
+            <!-- CREATE POST CARD -->
+            <div class="feed-card">
+
+                <div class="create-box">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="user-avatar">
+                            {{ request.user.username|first|upper }}
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-0">
+                                What's on your mind?
+                            </h6>
+                            <small class="text-secondary">
+                                Share something with the community.
+                            </small>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'tweet_create' %}"
+                       class="btn btn-primary">
+                        <i class="bi bi-plus-lg"></i> Post
+                    </a>
+                </div>
+
+            </div>
+
+
+            <!-- TWEET POSTS -->
+            {% for tweet in tweets %}
+
+                <article class="feed-card">
+
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div class="user-avatar">
+                            {{ tweet.user.username|first|upper }}
+                        </div>
+
+                        <div class="flex-grow-1">
+                            <h6 class="fw-bold mb-0">
+                                {{ tweet.user.username }}
+                            </h6>
+
+                            <small class="text-secondary">
+                                <i class="bi bi-clock"></i>
+                                {{ tweet.created_at|date:"M d, Y · h:i A" }}
+                            </small>
+                        </div>
+
+                        {% if tweet.user == request.user %}
+                            <span class="badge bg-primary-subtle text-primary">
+                                Your Post
+                            </span>
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="post-text mt-3">
+                        {{ tweet.text }}
+                    </div>
+
+
+                    {% if tweet.photo %}
+                        <img src="{{ tweet.photo.url }}"
+                             alt="Post by {{ tweet.user.username }}"
+                             class="post-photo">
+                    {% endif %}
+
+
+                    <div class="post-actions d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+                        <span class="text-secondary small">
+                            <i class="bi bi-chat-square-text me-1"></i>
+                            Community Post
+                        </span>
+
+                        {% if tweet.user == request.user %}
+                            <div class="d-flex gap-3">
+
+                                <a href="{% url 'tweet_update' tweet.pk %}">
+                                    <i class="bi bi-pencil-square me-1"></i>
+                                    Edit
+                                </a>
+
+                                <a href="{% url 'tweet_delete' tweet.pk %}"
+                                   class="text-danger">
+                                    <i class="bi bi-trash me-1"></i>
+                                    Delete
+                                </a>
+
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+                </article>
+
+            {% empty %}
+
+                <div class="feed-card text-center py-5">
+
+                    <div class="display-3 text-primary mb-3">
+                        <i class="bi bi-chat-square-heart"></i>
+                    </div>
+
+                    <h4 class="fw-bold">Your feed starts here!</h4>
+
+                    <p class="text-secondary">
+                        Be the first to share something with the community.
+                    </p>
+
+                    <a href="{% url 'tweet_create' %}"
+                       class="btn btn-primary px-4">
+                        Create Your First Post
+                    </a>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- RIGHT SIDEBAR -->
+        <div class="col-lg-3">
+
+            <div class="right-card">
+                <h6 class="fw-bold mb-3">
+                    <i class="bi bi-stars text-primary me-2"></i>
+                    About Tweetly
+                </h6>
+
+                <p class="text-secondary small mb-0">
+                    A place to express your ideas, share your moments
+                    and connect with people through meaningful conversations.
+                </p>
+            </div>
+
+            <div class="right-card">
+                <h6 class="fw-bold mb-3">
+                    <i class="bi bi-lightbulb text-warning me-2"></i>
+                    Community Tips
+                </h6>
+
+                <ul class="text-secondary small ps-3 mb-0">
+                    <li class="mb-2">Share meaningful thoughts.</li>
+                    <li class="mb-2">Use images to tell your story.</li>
+                    <li class="mb-2">Respect other users.</li>
+                    <li>Keep your community positive.</li>
+                </ul>
+            </div>
+
+            <div class="right-card text-center">
+                <div class="display-5 text-primary mb-2">
+                    <i class="bi bi-chat-heart"></i>
+                </div>
+
+                <h6 class="fw-bold">Your voice matters.</h6>
+
+                <p class="text-secondary small mb-0">
+                    Every great conversation begins with one post.
+                </p>
+            </div>
+
+        </div>
 
     </div>
+
 </div>
 
 {% endblock %}

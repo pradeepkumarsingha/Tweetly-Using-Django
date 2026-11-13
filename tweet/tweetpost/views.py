@@ -106,7 +106,7 @@ def login_view(request):
                 request,
                 f'Credential Successfully Varified, Welcome back {user.username}'
             )
-            return redirect('tweet-list')
+            return redirect('tweet_list')
     else:
         form=AuthenticationForm()
     return render(request,'login.html',{'form':form})
