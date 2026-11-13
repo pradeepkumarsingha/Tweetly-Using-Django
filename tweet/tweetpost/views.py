@@ -1,0 +1,123 @@
+from django.shortcuts import render
+from .models import tweet
+from .forms import TweetForm
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login,logout,authenticate
+from django.contrib import messages
+from django.contrib.auth.forms import AuthenticationForm
+from django.views.decorators.http import require_POST
+
+# Create your views here.
+def index(request):
+    return render(request,'index.html')
+
+
+def tweet_list(request):
+    tweets=tweet.objects.all().order_by('-created_at')
+    return render(request,'tweet_list.html',{'tweets':tweets})
+
+
+@login_required
+def tweet_create(request):
+    if request.method=="POST":
+        form =TweetForm(request.POST,request.FILES)
+        if form.is_valid():
+            tweet_obj=form.save(commit=False)
+            tweet_obj.user=request.user
+            tweet_obj.save()
+            return redirect('tweet_list')
+        
+    else:
+        form = TweetForm()
+    return render(request,'tweet_from.html',{'form':form ,'page_title':'Create Tweet'})
+
+
+@login_required
+def tweet_update(request,tweet_id):
+    tweet_obj=get_object_or_404(tweet,pk=tweet_id,user=request.user)
+    if request.method=='POST':
+        form=TweetForm(request.POST,request.FILES,instance=tweet_obj)
+        if form.is_valid():
+            form.save()
+            return redirect('tweet_list')
+    else:
+        form=TweetForm(instance=tweet_obj)
+    return render(request,'tweet_list.html',{'form':form,'tweet':tweet_obj,'page_title':'Update Tweet'})
+
+
+@login_required
+def tweet_delete(request,tweet_id):
+    tweet_obj=get_object_or_404(tweet,pk=tweet_id,user=request.user)
+
+    if  request.method=='POST':
+        tweet_obj.delete()
+        return redirect('tweet_list')
+    return render(request,'tweet_conform_delete.html',{'tweet': tweet_obj})
+
+
+
+def register_view(request):
+
+    if request.user.is_authenticated:
+        return redirect('tweet_list')
+
+    if request.method == 'POST':
+
+        form = UserCreationForm(request.POST)
+
+        if form.is_valid():
+
+            user = form.save()
+            login(request, user)
+
+            messages.success(
+                request,
+                'Your account has been created successfully!'
+            )
+
+            return redirect('tweet_list')
+
+    else:
+        form = UserCreationForm()
+
+    # IMPORTANT: Keep this return outside the POST condition
+    return render(request, 'register.html', {
+        'form': form
+    })
+
+
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('tweet_list')
+
+    if request.method=='POST':
+        form=AuthenticationForm(
+            request,
+            data=request.POST
+        )
+        if form.is_valid():
+            user=form.get_user()
+            login(request,user)
+
+            messages.success(
+                request,
+                f'Credential Successfully Varified, Welcome back {user.username}'
+            )
+            return redirect('tweet-list')
+    else:
+        form=AuthenticationForm()
+    return render(request,'login.html',{'form':form})
+
+@login_required
+@require_POST
+def logout_view(request):
+    logout(request)
+
+    messages.success(
+        request,
+        "Account Logout Successfully"
+    )
+    return redirect ('index')

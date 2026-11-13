@@ -1,0 +1,62 @@
+
+{% extends "layouts.html" %}
+
+{% block title %}{{ page_title }} | Tweetly{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="card shadow border-0 mx-auto p-4"
+         style="max-width: 650px;">
+
+        <h2 class="fw-bold mb-2">{{ page_title }}</h2>
+
+        <p class="text-secondary">
+            Share what's on your mind.
+        </p>
+
+        <form method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            <div class="mb-3">
+                <label class="form-label">Your thoughts</label>
+                {{ form.text }}
+                {{ form.text.errors }}
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">Upload photo</label>
+
+                {% if tweet.photo %}
+                    <div class="mb-3">
+                        <p>Current image:</p>
+                        <img src="{{ tweet.photo.url }}"
+                             class="img-fluid rounded"
+                             style="max-height: 200px;">
+                    </div>
+                {% endif %}
+
+                {{ form.photo }}
+                {{ form.photo.errors }}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+                {% if tweet %}Update Tweet{% else %}Publish Tweet{% endif %}
+            </button>
+
+            <a href="{% url 'tweet_list' %}"
+               class="btn btn-outline-secondary w-100 mt-2">
+                Cancel
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

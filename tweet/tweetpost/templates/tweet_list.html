@@ -1,0 +1,61 @@
+
+{% extends "layouts.html" %}
+
+{% block title %}
+Tweet Post Page
+{% endblock %}
+
+{% block content %}
+
+<h1 class="text-center mt-4">Welcome to the Tweet Post Page</h1>
+
+<div class="container mt-4">
+
+    <a class="btn btn-primary mb-3"
+       href="{% url 'tweet_create' %}">
+        Create Post
+    </a>
+
+    <div class="row gap-3">
+
+        {% for tweet in tweets %}
+
+        <section class="card" style="max-width: 320px;">
+
+            {% if tweet.photo %}
+                <img src="{{ tweet.photo.url }}"
+                     class="card-img-top"
+                     alt="Tweet image">
+            {% endif %}
+
+            <div class="card-body">
+
+                <h4>{{ tweet.user.username }}</h4>
+
+                <p>{{ tweet.text }}</p>
+
+                {% if tweet.user == request.user %}
+
+                    <a href="{% url 'tweet_update' tweet.pk %}"
+                       class="btn btn-primary">
+                        Edit
+                    </a>
+
+                    <a href="{% url 'tweet_delete' tweet.pk %}"
+                       class="btn btn-danger">
+                        Delete
+                    </a>
+
+                {% endif %}
+
+            </div>
+        </section>
+
+        {% empty %}
+            <p>No tweets available.</p>
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock %}
