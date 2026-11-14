@@ -9,6 +9,7 @@ from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.views.decorators.http import require_POST
+from django.db.models import Q
 
 # Create your views here.
 def index(request):
@@ -16,8 +17,22 @@ def index(request):
 
 
 def tweet_list(request):
-    tweets=tweet.objects.all().order_by('-created_at')
-    return render(request,'tweet_list.html',{'tweets':tweets})
+    query = request.GET.get('q', '').strip()
+
+    tweets = tweet.objects.select_related('user').all()
+
+    if query:
+        tweets = tweets.filter(
+            Q(text__icontains=query) |
+            Q(user__username__icontains=query)
+        )
+
+    tweets = tweets.order_by('-created_at')
+
+    return render(request, 'tweet_list.html', {
+        'tweets': tweets,
+        'query': query,
+    })
 
 
 @login_required

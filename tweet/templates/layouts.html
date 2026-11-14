@@ -47,12 +47,22 @@
 
                 <!-- SEARCH -->
                 <form class="tweetly-search mx-lg-auto my-3 my-lg-0"
-                      action="#" method="GET">
-                    <i class="bi bi-search"></i>
-                    <input type="search"
-                           name="q"
-                           placeholder="Search Tweetly..."
-                           aria-label="Search Tweetly">
+                        action="{% url 'tweet_list' %}"
+                         method="GET">
+
+                     <i class="bi bi-search"></i>
+
+                    <input
+                        type="search"
+                         name="q"
+                            placeholder="Search posts or users..."
+                            value="{{ query|default:'' }}"
+                            aria-label="Search posts or users"
+                    >
+
+                    <button type="submit" class="search-submit" aria-label="Search">
+                        <i class="bi bi-arrow-right"></i>
+                     </button>
                 </form>
 
                 <!-- NAVIGATION -->
