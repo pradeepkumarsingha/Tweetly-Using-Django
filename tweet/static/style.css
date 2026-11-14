@@ -48,13 +48,15 @@ a {
 }
 
 .tweetly-brand {
-    display: flex;
-    align-items: center;
-    gap: 9px;
     font-size: 27px;
     font-weight: 800;
+    color: #172033;
     letter-spacing: -1px;
-    color: #172033 !important;
+}
+
+.tweetly-brand i,
+.brand-dot {
+    color: #2563eb;
 }
 
 .brand-icon {
@@ -242,4 +244,67 @@ a {
     .tweetly-card {
         padding: 18px;
     }
+}
+
+
+.comment-section {
+    padding: 15px;
+    margin-top: 10px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.comment-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.comment-item p {
+    margin: 5px 0;
+}
+
+
+.comment-section {
+    padding: 15px 0;
+    margin-top: 10px;
+}
+
+.comment-item {
+    padding: 10px;
+    margin-bottom: 8px;
+    background: #f8fafc;
+    border-radius: 10px;
+}
+
+.comment-item p {
+    margin: 5px 0;
+    color: #475569;
+}
+
+.comment-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.comment-form input {
+    flex: 1;
+    min-width: 0;
+    padding: 11px 15px;
+    border: 1px solid #dbe3ef;
+    border-radius: 25px;
+    outline: none;
+}
+
+.comment-form input:focus {
+    border-color: #2563eb;
+}
+
+.comment-form button {
+    border: none;
+    background: #2563eb;
+    color: white;
+    padding: 9px 18px;
+    border-radius: 25px;
+    cursor: pointer;
 }

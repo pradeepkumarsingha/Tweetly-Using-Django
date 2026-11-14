@@ -6,6 +6,10 @@
 
 {% block content %}
   <style>
+    /* ==============================
+               GENERAL LAYOUT
+            ============================== */
+    
     .feed-wrapper {
       max-width: 1250px;
       margin: auto;
@@ -25,6 +29,10 @@
       top: 90px;
     }
     
+    /* ==============================
+               LEFT SIDEBAR
+            ============================== */
+    
     .sidebar-link {
       display: flex;
       align-items: center;
@@ -35,6 +43,7 @@
       color: #475569;
       font-weight: 600;
       text-decoration: none;
+      transition: 0.2s ease;
     }
     
     .sidebar-link:hover,
@@ -47,11 +56,31 @@
       font-size: 20px;
     }
     
+    .tweetly-logo {
+      font-size: 27px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      color: #172033;
+    }
+    
+    .tweetly-logo i,
+    .tweetly-logo span {
+      color: #2563eb;
+    }
+    
+    /* ==============================
+               FEED HEADING
+            ============================== */
+    
     .feed-heading {
       font-size: 27px;
       font-weight: 800;
       letter-spacing: -1px;
     }
+    
+    /* ==============================
+               POST CARD
+            ============================== */
     
     .feed-card {
       padding: 22px;
@@ -77,6 +106,14 @@
       flex-shrink: 0;
     }
     
+    .post-text {
+      font-size: 15px;
+      line-height: 1.75;
+      color: #334155;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    
     .post-photo {
       width: 100%;
       max-height: 430px;
@@ -86,35 +123,9 @@
       margin-top: 15px;
     }
     
-    .post-text {
-      font-size: 15px;
-      line-height: 1.75;
-      color: #334155;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
-    
-    .post-actions {
-      border-top: 1px solid #edf0f5;
-      margin-top: 17px;
-      padding-top: 15px;
-    }
-    
-    .post-actions a {
-      color: #64748b;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 600;
-    }
-    
-    .post-actions a:hover {
-      color: #2563eb;
-    }
-    
-    .right-card {
-      padding: 20px;
-      margin-bottom: 18px;
-    }
+    /* ==============================
+               CREATE POST CARD
+            ============================== */
     
     .create-box {
       display: flex;
@@ -123,26 +134,125 @@
       gap: 12px;
     }
     
+    /* ==============================
+               LIKE COMMENT SHARE
+            ============================== */
+    
+    .post-actions {
+      border-top: 1px solid #edf0f5;
+      margin-top: 17px;
+      padding-top: 12px;
+    }
+    
+    .interaction-btn {
+      background: transparent;
+      border: none;
+      color: #64748b;
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+    
+    .interaction-btn:hover {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+    
+    .interaction-btn.liked {
+      color: #ef4444;
+    }
+    
+    .interaction-btn.liked:hover {
+      background: #fef2f2;
+    }
+    
+    .interaction-btn i {
+      margin-right: 5px;
+      font-size: 17px;
+    }
+    
+    .post-footer {
+      border-top: 1px solid #edf0f5;
+      padding-top: 14px;
+      margin-top: 10px;
+    }
+    
+    .post-footer a {
+      color: #64748b;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
+    .post-footer a:hover {
+      color: #2563eb;
+    }
+    
+    /* ==============================
+               RIGHT SIDEBAR
+            ============================== */
+    
+    .right-card {
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+    
+    /* ==============================
+               RESPONSIVE
+            ============================== */
+    
     @media (max-width: 991px) {
       .feed-sidebar {
         position: static;
         margin-bottom: 20px;
       }
     }
+    
+    @media (max-width: 576px) {
+      .feed-card {
+        padding: 16px;
+      }
+    
+      .interaction-btn {
+        padding: 9px 7px;
+        font-size: 13px;
+      }
+    
+      .feed-heading {
+        font-size: 23px;
+      }
+    }
   </style>
 
   <div class="feed-wrapper py-3">
     <div class="row g-4">
-      <!-- LEFT SIDEBAR -->
+      <!--   ==============================
+             LEFT SIDEBAR
+        ==============================   -->
+
       <div class="col-lg-3">
         <div class="feed-sidebar">
-          <h4 class="fw-bold text-primary mb-4"><i class="bi bi-twitter-x"></i> Tweetly</h4>
+          <h4 class="tweetly-logo mb-4">
+            <i class="bi bi-feather"></i>
+            Tweetly<span>.</span>
+          </h4>
 
-          <a href="{% url 'tweet_list' %}" class="sidebar-link active"><i class="bi bi-house-door"></i> Home</a>
+          <a href="{% url 'tweet_list' %}" class="sidebar-link active">
+            <i class="bi bi-house-door"></i>
+            Home
+          </a>
 
-          <a href="{% url 'tweet_create' %}" class="sidebar-link"><i class="bi bi-plus-circle"></i> Create Post</a>
+          <a href="{% url 'tweet_create' %}" class="sidebar-link">
+            <i class="bi bi-plus-circle"></i>
+            Create Post
+          </a>
 
-          <a href="#feed" class="sidebar-link"><i class="bi bi-chat-left-text"></i> Explore Feed</a>
+          <a href="#feed" class="sidebar-link">
+            <i class="bi bi-chat-left-text"></i>
+            Explore Feed
+          </a>
 
           <hr />
 
@@ -150,53 +260,81 @@
 
           <div class="d-flex align-items-center gap-2 mb-3">
             <div class="user-avatar">{{ request.user.username|first|upper }}</div>
+
             <div class="overflow-hidden">
               <div class="fw-bold text-truncate">{{ request.user.username }}</div>
+
               <small class="text-secondary">Member</small>
             </div>
           </div>
 
-          <a href="{% url 'tweet_create' %}" class="btn btn-primary w-100"><i class="bi bi-plus-lg me-2"></i> Create Post</a>
+          <a href="{% url 'tweet_create' %}" class="btn btn-primary w-100">
+            <i class="bi bi-plus-lg me-2"></i>
+            Create Post
+          </a>
         </div>
       </div>
 
-      <!-- CENTRAL FEED -->
+      <!--   ==============================
+             CENTRAL FEED
+        ==============================   -->
+
       <div class="col-lg-6" id="feed">
+        <!-- FEED HEADING -->
+
         <div class="d-flex justify-content-between align-items-center mb-4">
           <div>
             {% if query %}
               <h2 class="feed-heading mb-1">Search Results</h2>
+
               <p class="text-secondary">
-                Results for "<strong>{{ query }}</strong>"
+                Results for
+                <strong>{{ query }}</strong>
+
                 <a href="{% url 'tweet_list' %}" class="ms-2">Clear search</a>
               </p>
             {% else %}
               <h2 class="feed-heading mb-1">Home Feed</h2>
+
               <p class="text-secondary mb-0">Discover what's happening in the community.</p>
             {% endif %}
           </div>
 
-          <span class="badge rounded-pill bg-primary-subtle text-primary p-2"><i class="bi bi-globe2"></i> Community</span>
+          <span class="badge rounded-pill bg-primary-subtle text-primary p-2">
+            <i class="bi bi-globe2"></i>
+            Community
+          </span>
         </div>
 
         <!-- CREATE POST CARD -->
+
         <div class="feed-card">
           <div class="create-box">
             <div class="d-flex align-items-center gap-3">
               <div class="user-avatar">{{ request.user.username|first|upper }}</div>
+
               <div>
                 <h6 class="fw-bold mb-0">What's on your mind?</h6>
+
                 <small class="text-secondary">Share something with the community.</small>
               </div>
             </div>
 
-            <a href="{% url 'tweet_create' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Post</a>
+            <a href="{% url 'tweet_create' %}" class="btn btn-primary">
+              <i class="bi bi-plus-lg"></i>
+              Post
+            </a>
           </div>
         </div>
 
-        <!-- TWEET POSTS -->
+        <!--   ==============================
+                 TWEET POSTS
+            ==============================   -->
+
         {% for tweet in tweets %}
-          <article class="feed-card">
+          <article class="feed-card" id="tweet-{{ tweet.pk }}">
+            <!-- USER INFORMATION -->
+
             <div class="d-flex align-items-center gap-3">
               <div class="user-avatar">{{ tweet.user.username|first|upper }}</div>
 
@@ -205,6 +343,7 @@
 
                 <small class="text-secondary">
                   <i class="bi bi-clock"></i>
+
                   {{ tweet.created_at|date:'M d, Y · h:i A' }}
                 </small>
               </div>
@@ -214,13 +353,105 @@
               {% endif %}
             </div>
 
+            <!-- POST CONTENT -->
+
             <div class="post-text mt-3">{{ tweet.text }}</div>
+
+            <!-- POST IMAGE -->
 
             {% if tweet.photo %}
               <img src="{{ tweet.photo.url }}" alt="Post by {{ tweet.user.username }}" class="post-photo" />
             {% endif %}
 
-            <div class="post-actions d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <!--   ==============================
+                         LIKE COMMENT SHARE
+                    ==============================   -->
+
+            <div class="post-actions">
+              <div class="d-flex justify-content-around align-items-center">
+                <!-- LIKE -->
+                <form method="POST" action="{% url 'toggle_like' tweet.pk %}">
+                  {% csrf_token %}
+                  <button type="submit" class="interaction-btn {% if tweet.liked_by_user %}liked{% endif %}">
+                    <i class="bi bi-heart{% if tweet.liked_by_user %}-fill{% endif %}"></i>
+                    {% if tweet.liked_by_user %}
+                      Unlike
+                    {% else %}
+                      Like
+                    {% endif %}
+                    {{ tweet.likes.count }}
+                  </button>
+                </form>
+
+                <!-- COMMENT -->
+                <button type="button" class="interaction-btn" onclick="toggleComments({{ tweet.pk }})">
+                  <i class="bi bi-chat"></i>
+                  Comment {{ tweet.comments.count }}
+                </button>
+
+                <!-- SHARE -->
+                <button type="button" class="interaction-btn" onclick="shareTweet('{{ request.scheme }}://{{ request.get_host }}/tweets/#tweet-{{ tweet.pk }}')">
+                  <i class="bi bi-share"></i>
+                  Share
+                </button>
+              </div>
+            </div>
+
+            <!-- COMMENT SECTION -->
+            
+<!-- COMMENT SECTION -->
+<div id="comment-section-{{ tweet.pk }}"
+     class="comment-section"
+     style="display: none;">
+
+    <hr>
+    <h6>Comments</h6>
+
+    <!-- DISPLAY EXISTING COMMENTS -->
+    {% for comment in tweet.comments.all %}
+        <div class="comment-item">
+            <strong>{{ comment.user.username }}</strong>
+            <p>{{ comment.content }}</p>
+            <small class="text-muted">
+                {{ comment.created_at|date:"M d, Y h:i A" }}
+            </small>
+        </div>
+    {% empty %}
+        <p class="text-muted">
+            No comments yet. Be the first to comment!
+        </p>
+    {% endfor %}
+
+    <!-- ADD NEW COMMENT -->
+    {% if user.is_authenticated %}
+        <form method="POST"
+              action="{% url 'add_comment' tweet.pk %}"
+              class="comment-form">
+
+            {% csrf_token %}
+
+            <input type="text"
+                   name="content"
+                   placeholder="Write a comment..."
+                   maxlength="500"
+                   required>
+
+            <button type="submit">
+                <i class="bi bi-send"></i> Post
+            </button>
+        </form>
+    {% endif %}
+
+</div>
+
+
+            <!-- COMMENT SECTION TARGET -->
+
+            <div id="comment-section-{{ tweet.pk }}"></div>
+
+            <!-- POST FOOTER: EDIT / DELETE -->
+
+            <div class="post-footer d-flex justify-content-between align-items-center flex-wrap gap-2">
               <span class="text-secondary small">
                 <i class="bi bi-chat-square-text me-1"></i>
                 Community Post
@@ -242,24 +473,35 @@
             </div>
           </article>
         {% empty %}
+          <!-- EMPTY SEARCH / FEED -->
+
           <div class="feed-card text-center py-5">
             <i class="bi bi-search display-3 text-primary"></i>
 
             {% if query %}
               <h4 class="fw-bold mt-3">No results found</h4>
+
               <p class="text-secondary">We couldn't find any posts matching "{{ query }}".</p>
+
               <a href="{% url 'tweet_list' %}" class="btn btn-primary">View All Posts</a>
             {% else %}
               <h4 class="fw-bold mt-3">Your feed starts here!</h4>
+
               <p class="text-secondary">Be the first to share something.</p>
+
               <a href="{% url 'tweet_create' %}" class="btn btn-primary">Create Your First Post</a>
             {% endif %}
           </div>
         {% endfor %}
       </div>
 
-      <!-- RIGHT SIDEBAR -->
+      <!--   ==============================
+             RIGHT SIDEBAR
+        ==============================   -->
+
       <div class="col-lg-3">
+        <!-- ABOUT -->
+
         <div class="right-card">
           <h6 class="fw-bold mb-3">
             <i class="bi bi-stars text-primary me-2"></i>
@@ -269,6 +511,8 @@
           <p class="text-secondary small mb-0">A place to express your ideas, share your moments and connect with people through meaningful conversations.</p>
         </div>
 
+        <!-- COMMUNITY TIPS -->
+
         <div class="right-card">
           <h6 class="fw-bold mb-3">
             <i class="bi bi-lightbulb text-warning me-2"></i>
@@ -277,11 +521,16 @@
 
           <ul class="text-secondary small ps-3 mb-0">
             <li class="mb-2">Share meaningful thoughts.</li>
+
             <li class="mb-2">Use images to tell your story.</li>
+
             <li class="mb-2">Respect other users.</li>
+
             <li>Keep your community positive.</li>
           </ul>
         </div>
+
+        <!-- COMMUNITY MESSAGE -->
 
         <div class="right-card text-center">
           <div class="display-5 text-primary mb-2">
@@ -295,4 +544,44 @@
       </div>
     </div>
   </div>
+
+  <!--   ==============================
+     SHARE FUNCTIONALITY
+==============================   -->
+
+  <script>
+    async function shareTweet(url) {
+      try {
+        if (navigator.share) {
+          await navigator.share({
+            title: 'Tweetly',
+            text: 'Check out this post on Tweetly!',
+            url: url
+          })
+        } else if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(url)
+    
+          alert('Post link copied successfully!')
+        } else {
+          window.prompt('Copy this post link:', url)
+        }
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          console.error('Sharing failed:', error)
+          alert('Unable to share this post.')
+        }
+      }
+    }
+  </script>
+  <script>
+    function toggleComments(tweetId) {
+      const section = document.getElementById(`comment-section-${tweetId}`)
+    
+      if (section.style.display === 'none') {
+        section.style.display = 'block'
+      } else {
+        section.style.display = 'none'
+      }
+    }
+  </script>
 {% endblock %}
